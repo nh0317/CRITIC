@@ -46,7 +46,7 @@ class CodeChatbot:
 
         # RAG에 활용할 LLM
         if "OPENAI_API_KEY" not in os.environ:
-            os.environ["OPENAI_API_KEY"] = API_KEY
+            os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
         self.llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
 
         # 질문 프롬프트 라우팅에 활용할 LLM
