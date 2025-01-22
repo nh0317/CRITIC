@@ -11,6 +11,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langgraph.graph import END, StateGraph
 import nltk
+
+from chatbot.testcode.testcode_generator import generate_unit_test, save_test
+
 nltk.download('punkt_tab')
 nltk.download('averaged_perceptron_tagger_eng')
 
@@ -80,7 +83,7 @@ class CodeChatbot:
         self.graph.add_edge('code_review','answer_with_retrieval')
         self.graph.add_edge('code_refactor','answer_with_retrieval')
         self.graph.add_edge('check_convention','answer_with_retrieval')
-        self.graph.add_edge('generate_test_code','answer_with_retrieval')
+        self.graph.add_edge('generate_test_code',END)
 
         # 조건부 간선 추가
         # "plain_answer" 조건은 "plain_answer" 노드로 연결
@@ -137,7 +140,14 @@ class CodeChatbot:
         question = state["question"]
         data = self.code
 
-        return {"question": question, "data": data, "category": "generate_test_code"}
+        test_code = generate_unit_test(data)
+        save_test('Test.java',test_code)
+
+        return {
+            "question": question,
+            "generation": '```java'+test_code+'\n```' + '\n(generate_test_code)',
+            "category": 'generate_test_code',
+        }
 
     def answer(self, state: State):
         """
