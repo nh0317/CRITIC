@@ -6,7 +6,11 @@ def get_model_response(model, code, test_type):
     prompt = f"""
         generate a {test_type} case for the following Java code. 
         Include all necessary imports and test multiple scenarios
-        the test code should meet 100% test coverage.
+        the test code should meet below conditions 
+        
+        1. Test code should meet Test Coverage 100% 
+        2. Test code should pass the {test_type}
+        3. Test code should include the edge cases
         """
     messages = [{ 'role' : 'system', 'content' : prompt},
                   {'role':'user', 'content': code}]

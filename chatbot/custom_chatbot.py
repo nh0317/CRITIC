@@ -12,7 +12,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langgraph.graph import END, StateGraph
 import nltk
 
-from chatbot.testcode.testcode_generator import generate_unit_test, save_test
+from chatbot.testcode.testcode_generator import generate_unit_test, save_test, save_src
 
 nltk.download('punkt_tab')
 nltk.download('averaged_perceptron_tagger_eng')
@@ -139,9 +139,10 @@ class CodeChatbot:
         """
         question = state["question"]
         data = self.code
-
         test_code = generate_unit_test(data)
-        save_test('Test.java',test_code)
+        
+        save_src(self.code)
+        save_test(test_code)
 
         return {
             "question": question,

@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'jacoco' // JaCoCo 플러그인
+}
+ 
+group = 'com.example'
+version = '1.0'
+ 
+java {
+    sourceCompatibility = JavaVersion.VERSION_23 // Java 버전 설정
+    targetCompatibility = JavaVersion.VERSION_23
+}
+ 
+repositories {
+    mavenCentral() // Maven Central 저장소
+}
+ 
+dependencies {
+    // JUnit 5 (Jupiter)
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+ 
+jacocoTestReport {
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = false
+	}
+}
+test {
+	// finalizedBy : 이(test) 작업에 대해 주어진 종료자 작업을 추가
+	finalizedBy jacocoTestReport // test 작업이 끝나고 jacocoTestReport를 실행
+	useJUnitPlatform()
+}
+jacocoTestReport {
+	// dependsOn : 이 작업에 지정된 종속성을 추가
+	dependsOn test // jacocoTestReport 에 test라는 종속성을 추가
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = false;
+			element = 'CLASS'
+
+			limit {
+				counter = 'INSTRUCTION'
+				value = 'COVEREDRATIO'
+				minimum = 0.5
+			}
+		}
+
+	}
+}
